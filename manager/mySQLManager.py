@@ -16,14 +16,19 @@ class MySQLManager(object):
         """
         config = load_yaml(DB_CONFIG_PATH)
 
-        self.__connect = MySQLdb.connect(
-            host=config[MYSQL][connection_name][HOST],
-            port=config[MYSQL][connection_name][PORT],
-            user=config[MYSQL][connection_name][USER],
-            passwd=config[MYSQL][connection_name][PASSWD],
-            db=config[MYSQL][connection_name][DB],
-            charset=config[MYSQL][connection_name][CHARSET]
-        )
+        try:
+            self.__connect = MySQLdb.connect(
+                host=config[MYSQL][connection_name][HOST],
+                port=config[MYSQL][connection_name][PORT],
+                user=config[MYSQL][connection_name][USER],
+                passwd=config[MYSQL][connection_name][PASSWD],
+                db=config[MYSQL][connection_name][DB],
+                charset=config[MYSQL][connection_name][CHARSET]
+            )
+        except Exception as e:
+            self.__isClose = True
+            raise e
+
         self.__cursor = self.__connect.cursor()
         self.__isClose = False
 
