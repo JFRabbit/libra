@@ -14,9 +14,9 @@ class MySQLManager(object):
                 2 连接数据库
                 3 设置光标
         """
-        config = load_yaml(DB_CONFIG_PATH)
-
         try:
+            config = load_yaml(DB_CONFIG_PATH)
+
             self.__connect = MySQLdb.connect(
                 host=config[MYSQL][connection_name][HOST],
                 port=config[MYSQL][connection_name][PORT],

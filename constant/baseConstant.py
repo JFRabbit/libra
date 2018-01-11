@@ -1,7 +1,7 @@
 # coding: utf-8
 import sys
 
-DB_CONFIG_PATH = sys.path[1] + '/config/db.yaml'
+DB_CONFIG_PATH = sys.path[0][0:sys.path[0].index("libra")] + "libra" + '/config/db.yaml'
 
 MYSQL = 'mysql'
 HOST = 'host'
@@ -12,3 +12,6 @@ DB = 'db'
 CHARSET = 'charset'
 
 MONGO = 'mongo'
+
+if __name__ == "__main__":
+    print(DB_CONFIG_PATH)
