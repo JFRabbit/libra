@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import MySQLdb as mysql
+import MySQLdb
 from constant.baseConstant import *
 from util.yamlUtil import *
 
@@ -16,7 +16,7 @@ class MySQLManager(object):
         """
         config = load_yaml(DB_CONFIG_PATH)
 
-        self.__connect = mysql.connect(
+        self.__connect = MySQLdb.connect(
             host=config[MYSQL][connection_name][HOST],
             port=config[MYSQL][connection_name][PORT],
             user=config[MYSQL][connection_name][USER],
@@ -24,8 +24,7 @@ class MySQLManager(object):
             db=config[MYSQL][connection_name][DB],
             charset=config[MYSQL][connection_name][CHARSET]
         )
-
-        self.getCursor()
+        self.__cursor = self.__connect.cursor()
         self.__isClose = False
 
     def __del__(self):
@@ -33,26 +32,21 @@ class MySQLManager(object):
 
     def close(self):
         """关闭数据库连接"""
-        if self.__isClose == False:
+        if self.__isClose is False:
             self.__connect.close()
             self.__isClose = True
-
-    def getCursor(self):
-        """获取光标"""
-        self.__cursor = self.__connect.cursor()
-        return self.__cursor
 
     def execute(self, sql):
         """执行SQL"""
         self.__cursor.execute(sql)
 
-    def find(self, sql, all=True):
+    def find(self, sql, find_all=True):
         """查询：
             如果all = True 返回所有数据
             否则只返回第一条数据
         """
         self.execute(sql)
-        if all:
+        if find_all:
             return self.__cursor.fetchall()
         return self.__cursor.fetchone()
 
@@ -64,7 +58,8 @@ class MySQLManager(object):
             num = self.__cursor.execute(sql)
             self.__connect.commit()
             return num
-        except:
+        except Exception as e:
+            print(e)
             self.__connect.rollback()
             return 0
 
@@ -82,13 +77,13 @@ if __name__ == '__main__':
     print(manager.find(sql_find))
 
     data = manager.find(sql_find)  # type: tuple
-    num = data[-1][0]
+    effect_num = data[-1][0]
 
-    sql_update = "update foo set foo_name = 'Marry' where foo_id = '%d'" % num
+    sql_update = "update foo set foo_name = 'Marry' where foo_id = '%d'" % effect_num
     print(manager.change(sql_update))
     print(manager.find(sql_find))
 
-    sql_delete = "delete from foo where foo_id = '%d'" % num
+    sql_delete = "delete from foo where foo_id = '%d'" % effect_num
     print(manager.change(sql_delete))
     print(manager.find(sql_find))
 
