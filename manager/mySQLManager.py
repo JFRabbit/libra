@@ -3,6 +3,7 @@
 import MySQLdb
 from constant.baseConstant import *
 from util.yamlUtil import *
+from util.jsonFormat import *
 
 
 class MySQLManager(object):
@@ -67,6 +68,33 @@ class MySQLManager(object):
             print(e)
             self.__connect.rollback()
             return 0
+
+
+def sql_result_2_dict(select_items: tuple, result_items: tuple):
+    if len(select_items) is 0 or len(result_items) is 0:
+        raise Exception("Data length is 0")
+
+    if len(select_items) is not len(result_items[0]):
+        raise Exception("Data length different")
+
+    if len(result_items) is 1:
+        obj = {}
+        for j in select_items:
+            obj[j] = result_items[0][select_items.index(j)]
+
+        print(json_format(obj))
+        return obj
+
+    result = []
+    for i in result_items:
+        obj = {}
+        for j in select_items:
+            obj[j] = i[select_items.index(j)]
+
+        result.append(obj)
+
+    print(json_format(result))
+    return result
 
 
 if __name__ == '__main__':
