@@ -1,6 +1,7 @@
 # coding: utf-8
+import sys
 
-DB_CONFIG_PATH = '../config/db.yaml'
+DB_CONFIG_PATH = sys.path[1] + '/config/db.yaml'
 
 MYSQL = 'mysql'
 HOST = 'host'

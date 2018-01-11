@@ -8,7 +8,7 @@ from util.yamlUtil import *
 class MySQLManager(object):
     """数据库操作类"""
 
-    def __init__(self):
+    def __init__(self, connection_name: str):
         """初始化：
                 1 加载配置文件
                 2 连接数据库
@@ -16,9 +16,14 @@ class MySQLManager(object):
         """
         config = load_yaml(DB_CONFIG_PATH)
 
-        self.__connect = mysql.connect(host=config[MYSQL][HOST], port=config[MYSQL][PORT], user=config[MYSQL][USER],
-                                       passwd=config[MYSQL][PASSWD], db=config[MYSQL][DB],
-                                       charset=config[MYSQL][CHARSET])
+        self.__connect = mysql.connect(
+            host=config[MYSQL][connection_name][HOST],
+            port=config[MYSQL][connection_name][PORT],
+            user=config[MYSQL][connection_name][USER],
+            passwd=config[MYSQL][connection_name][PASSWD],
+            db=config[MYSQL][connection_name][DB],
+            charset=config[MYSQL][connection_name][CHARSET]
+        )
 
         self.getCursor()
         self.__isClose = False
@@ -66,7 +71,7 @@ class MySQLManager(object):
 
 if __name__ == '__main__':
     help(MySQLManager)
-    manager = MySQLManager()
+    manager = MySQLManager("local")
 
     sql_find = 'SELECT * FROM foo'
     print(manager.find(sql_find))
