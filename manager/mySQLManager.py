@@ -87,4 +87,4 @@ if __name__ == '__main__':
     print(manager.change(sql_delete))
     print(manager.find(sql_find))
 
-    # manager.close()
+    manager.close()
