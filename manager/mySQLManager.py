@@ -97,6 +97,15 @@ def sql_result_2_dict(select_items: tuple, result_items: tuple):
     return result
 
 
+def dict_2_class(data: dict, target_class: object):
+    for k, v in target_class.__dict__.items():  # type: str, object
+        try:
+            setattr(target_class, k, data[k])
+        except KeyError:
+            setattr(target_class, k, v)
+    return target_class
+
+
 if __name__ == '__main__':
     help(MySQLManager)
     manager = MySQLManager("local")
